@@ -1,21 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/python/:path*',
-        destination: 'http://127.0.0.1:8000/:path*',
-      },
-    ];
-  },
+  // Desativa rewrites no modo export estático, pois não são suportados
+  // rewrites: async () => { ... }
 };
 
 export default nextConfig;

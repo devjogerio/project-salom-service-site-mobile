@@ -1,6 +1,7 @@
 {
-  "name": "app",
-  "version": "0.1.0",
+  "name": "project-salom-service-site-mobile",
+  "version": "1.2.0",
+  "homepage": "https://devjogerio.github.io/project-salom-service-site-mobile",
   "private": true,
   "scripts": {
     "dev": "nodemon --config nodemon.json",
