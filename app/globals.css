@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* 
+  Definição do Tema Personalizado 
+  Utiliza variáveis CSS nativas integradas ao Tailwind v4
+*/
+@theme {
+  /* Cores da Identidade Visual Honda */
+  --color-honda-red: #DC143C;     /* Vermelho Principal */
+  --color-honda-silver: #C0C0C0;  /* Prata Metálico */
+  --color-honda-dark: #000000;    /* Preto para Textos */
+  --color-honda-light: #F5F5F5;   /* Cinza Claro para Backgrounds */
+  --color-honda-white: #FFFFFF;   /* Branco */
+  
+  /* Definição de Fontes */
+  --font-montserrat: var(--font-montserrat);
+  --font-roboto: var(--font-roboto);
+}
+
+/* 
+  Reset e Estilos Globais 
+*/
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
+body {
+  /* Garante suavização de fontes em dispositivos Apple */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilitários personalizados se necessário */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 
+  Regras de Responsividade Avançada (Media Queries)
+  Define ajustes específicos para diferentes breakpoints e orientações
+*/
+
+/* Mobile First (Base) - < 360px */
+/* Ajustes para telas muito pequenas (iPhone SE antigo, Galaxy Fold fechado) */
+@media (max-width: 359px) {
+  html {
+    font-size: 14px; /* Reduz a base da fonte para caber mais conteúdo */
+  }
+  
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Mobile Standard - 360px a 767px */
+@media (min-width: 360px) and (max-width: 767px) {
+  html {
+    font-size: 16px; /* Padrão */
+  }
+}
+
+/* Tablet / iPad - 768px a 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Ajuste de espaçamento para tablets */
+  .section-padding {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Desktop / Laptop - 1024px a 1439px */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  /* Otimização para laptops */
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* Large Desktop / Monitor - >= 1440px */
+@media (min-width: 1440px) {
+  /* Aproveita telas grandes */
+  .container {
+    max-width: 1280px;
+  }
+  
+  html {
+    font-size: 18px; /* Aumenta legibilidade em monitores grandes */
+  }
+}
+
+/* Feature Detection e Fallbacks */
+/* Fallback para navegadores que não suportam clamp() */
+@supports not (font-size: clamp(1rem, 2vw, 2rem)) {
+  .responsive-text {
+    font-size: 1rem; /* Fallback seguro */
+  }
+  
+  @media (min-width: 768px) {
+    .responsive-text {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .responsive-text {
+      font-size: 2rem;
+    }
+  }
+}
