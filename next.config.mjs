@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // 'export' apenas em produção para gerar site estático (GitHub Pages)
+  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -20,8 +21,20 @@ const nextConfig = {
       },
     ],
   },
-  // Desativa rewrites no modo export estático, pois não são suportados
-  // rewrites: async () => { ... }
+  // Rewrites ativos apenas em desenvolvimento para proxy do Backend
+  rewrites: async () => {
+    if (process.env.NODE_ENV === 'production') return [];
+    return [
+      {
+        source: '/api/python/:path*',
+        destination: 'http://127.0.0.1:8000/:path*',
+      },
+    ];
+  },
+  // Permite acesso via IP local durante desenvolvimento
+  experimental: {
+    allowedDevOrigins: ['localhost:3000', '192.168.1.8:3000'],
+  },
 };
 
 export default nextConfig;
