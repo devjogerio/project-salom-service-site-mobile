@@ -3,6 +3,8 @@ import { AppointmentRequest } from '@/types/appointment';
 import { z } from 'zod';
 
 const isServer = typeof window === 'undefined';
+const isProd = process.env.NODE_ENV === 'production';
+const REPO_BASE = '/project-salom-service-site-mobile';
 
 // Lógica de URL da API:
 // 1. Se houver API_INTERNAL_URL definida (Docker Server-Side), use-a no servidor.
@@ -17,6 +19,20 @@ const API_URL = isServer && process.env.API_INTERNAL_URL
  * Conecta com a API Python (FastAPI).
  */
 export async function fetchServices(): Promise<Service[]> {
+  // Em produção (GitHub Pages), usamos o JSON estático como fallback
+  if (isProd && !process.env.NEXT_PUBLIC_API_URL) {
+    try {
+      console.log('Modo Produção Estático: Buscando serviços do JSON local...');
+      const response = await fetch(`${REPO_BASE}/services_catalog.json`);
+      if (!response.ok) throw new Error('Falha ao carregar catálogo estático');
+      const data = await response.json();
+      return ServiceListSchema.parse(data);
+    } catch (error) {
+      console.error('Erro ao carregar serviços estáticos:', error);
+      return []; // Retorna vazio em caso de erro crítico no estático
+    }
+  }
+
   try {
     const response = await fetch(`${API_URL}/services`);
     if (!response.ok) {
@@ -79,6 +95,22 @@ export async function fetchServiceById(id: string): Promise<Service | null> {
 export async function createAppointment(
   params: AppointmentRequest,
 ): Promise<AppointmentResponse> {
+  // Mock para produção estática (GitHub Pages)
+  if (isProd && !process.env.NEXT_PUBLIC_API_URL) {
+    console.log('Modo Produção Estático: Simulando agendamento...');
+    await new Promise((resolve) => setTimeout(resolve, 1500)); // Delay fake
+    
+    return {
+      id: `mock-${Date.now()}`,
+      clientId: 'mock-client',
+      serviceId: params.serviceId,
+      date: typeof params.date === 'string' ? params.date : params.date.toISOString(),
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+      notes: params.notes
+    } as unknown as AppointmentResponse;
+  }
+
   try {
     const response = await fetch(`${API_URL}/appointments`, {
       method: 'POST',
