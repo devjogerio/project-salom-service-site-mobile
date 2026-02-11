@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar, Clock, User, Phone, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { User, Phone, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { createAppointment } from '../services/beautyService';
 import { AppointmentResponse } from '../types/appointment';
 import { useServices } from '../hooks/useServices';

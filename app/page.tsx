@@ -15,12 +15,7 @@ import { useServices } from '@/hooks/useServices';
 export default function Home() {
   // Referência para rolagem suave até o catálogo
   const catalogRef = useRef<HTMLDivElement>(null);
-  const { services, loading } = useServices();
-
-  // Função para rolar até o catálogo
-  const scrollToCatalog = () => {
-    catalogRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const { loading } = useServices();
 
   if (loading) {
     return (

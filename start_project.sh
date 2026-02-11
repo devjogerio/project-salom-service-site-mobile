@@ -85,13 +85,15 @@ load_nvm() {
         log "SUCCESS" "NVM carregado (Homebrew)."
     else
         log "WARN" "NVM não encontrado nos caminhos padrão. Assumindo Node.js no PATH."
-        return
     fi
     
-    # Tenta usar uma versão específica do Node
+    # Tenta usar uma versão específica do Node se o NVM estiver disponível
     if command -v nvm &> /dev/null; then
-        if nvm use 20.20.0 &> /dev/null; then
-             log "INFO" "Usando Node v20.20.0 via NVM."
+        if [ -f ".nvmrc" ]; then
+            nvm use &> /dev/null
+            log "INFO" "Usando versão do Node definida no .nvmrc."
+        elif nvm use 20 &> /dev/null; then
+             log "INFO" "Usando Node v20 via NVM."
         elif nvm use default &> /dev/null; then
              log "INFO" "Usando Node default via NVM."
         elif nvm use node &> /dev/null; then
@@ -125,15 +127,29 @@ setup_env() {
     # Frontend .env
     if [ ! -f "$FRONTEND_DIR/.env" ]; then
         if [ -f "$FRONTEND_DIR/.env.example" ]; then
-            log "WARN" "Arquivo .env não encontrado. Criando a partir de .env.example..."
+            log "WARN" "Arquivo .env não encontrado no Frontend. Criando a partir de .env.example..."
             cp "$FRONTEND_DIR/.env.example" "$FRONTEND_DIR/.env"
-            log "SUCCESS" "Arquivo .env criado. Verifique as configurações se necessário."
+            log "SUCCESS" "Arquivo .env do Frontend criado."
         else
             log "ERROR" "Arquivo .env e .env.example não encontrados no Frontend!"
-            exit 1
+            # exit 1 # Não falhar se não tiver, mas avisar
         fi
     else
         log "INFO" "Arquivo .env do Frontend já existe."
+    fi
+
+    # Backend .env
+    if [ ! -f "$BACKEND_DIR/.env" ]; then
+        if [ -f "$BACKEND_DIR/.env.example" ]; then
+            log "WARN" "Arquivo .env não encontrado no Backend. Criando a partir de .env.example..."
+            cp "$BACKEND_DIR/.env.example" "$BACKEND_DIR/.env"
+            log "SUCCESS" "Arquivo .env do Backend criado."
+        else
+             # Backend pode não ter .env obrigatório se usar defaults, mas vamos logar
+             log "INFO" "Nenhum .env.example encontrado no Backend ou .env já existe."
+        fi
+    else
+        log "INFO" "Arquivo .env do Backend já existe."
     fi
 }
 
@@ -155,9 +171,7 @@ setup_backend() {
     pip install -r requirements.txt >> "$LOG_FILE" 2>&1
     check_error "Falha ao instalar dependências do Backend."
     
-    # Setup inicial do banco de dados (se necessário)
-    # O código atual já popula no startup via lifespan, então apenas logamos.
-    log "SUCCESS" "Backend configurado."
+    log "SUCCESS" "Backend configurado e dependências instaladas."
     cd "$FRONTEND_DIR" || exit 1
 }
 
@@ -179,38 +193,44 @@ setup_frontend() {
 
 cleanup() {
     log "WARN" "Encerrando processos..."
-    kill $(jobs -p) 2>/dev/null
+    # Mata processos filhos do script atual
+    pkill -P $$ 2>/dev/null
     log "SUCCESS" "Processos encerrados. Tchau!"
+}
+
+wait_for_backend() {
+    log "INFO" "Aguardando Backend iniciar na porta $BACKEND_PORT..."
+    local retries=30
+    local wait_time=1
+    
+    for ((i=1; i<=retries; i++)); do
+        if curl -s "http://127.0.0.1:$BACKEND_PORT/health" > /dev/null || curl -s "http://127.0.0.1:$BACKEND_PORT/docs" > /dev/null; then
+            log "SUCCESS" "Backend iniciado com sucesso."
+            return 0
+        fi
+        sleep $wait_time
+    done
+    
+    log "ERROR" "Backend falhou ao iniciar dentro do tempo limite ($((retries * wait_time))s)."
+    return 1
 }
 
 run_dev() {
     log "INFO" "Iniciando modo DESENVOLVIMENTO..."
     
     # Backend em background
-    log "INFO" "Iniciando servidor Backend na porta $BACKEND_PORT..."
+    log "INFO" "Iniciando servidor Backend..."
     cd "$BACKEND_DIR" && source venv/bin/activate && uvicorn app.main:app --reload --port $BACKEND_PORT >> "$LOG_FILE" 2>&1 &
-    BACKEND_PID=$!
+    
     cd "$FRONTEND_DIR"
 
-    # Aguardar Backend subir (health check)
-    log "INFO" "Aguardando Backend iniciar (pode levar alguns segundos)..."
-    for i in {1..30}; do
-        if curl -s "http://127.0.0.1:$BACKEND_PORT/health" > /dev/null; then
-            log "SUCCESS" "Backend iniciado com sucesso."
-            break
-        fi
-        if [ $i -eq 30 ]; then
-            log "ERROR" "Backend falhou ao iniciar dentro do tempo limite. Verifique o log."
-            kill $BACKEND_PID 2>/dev/null
-            exit 1
-        fi
-        sleep 1
-    done
+    # Aguardar Backend
+    wait_for_backend || exit 1
 
     # Frontend
     log "INFO" "Iniciando servidor Frontend na porta $FRONTEND_PORT..."
     
-    # Abrir navegador automaticamente
+    # Abrir navegador
     if [[ "$OSTYPE" == "darwin"* ]]; then
         (sleep 5 && open "http://localhost:$FRONTEND_PORT") &
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -227,39 +247,69 @@ run_prod() {
 
     # Build Frontend
     log "INFO" "Compilando Frontend (Build)..."
-    npm run build
-    check_error "Falha no build do Frontend."
+    npm run build >> "$LOG_FILE" 2>&1
+    check_error "Falha no build do Frontend. Verifique o log."
 
     # Backend em background
     log "INFO" "Iniciando servidor Backend (Produção)..."
     cd "$BACKEND_DIR" && source venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port $BACKEND_PORT >> "$LOG_FILE" 2>&1 &
-    BACKEND_PID=$!
+    
     cd "$FRONTEND_DIR"
 
-    # Aguardar Backend subir (health check)
-    log "INFO" "Aguardando Backend iniciar (pode levar alguns segundos)..."
-    for i in {1..30}; do
-        if curl -s "http://127.0.0.1:$BACKEND_PORT/health" > /dev/null; then
-            log "SUCCESS" "Backend iniciado com sucesso."
-            break
-        fi
-        if [ $i -eq 30 ]; then
-            log "ERROR" "Backend falhou ao iniciar dentro do tempo limite. Verifique o log."
-            kill $BACKEND_PID 2>/dev/null
-            exit 1
-        fi
-        sleep 1
-    done
+    # Aguardar Backend
+    wait_for_backend || exit 1
 
     # Frontend Start
-    log "INFO" "Iniciando servidor Frontend (Start)..."
-    npm start
+    # Verifica se é exportação estática
+    if grep -q "output: 'export'" next.config.mjs; then
+        log "INFO" "Detectada configuração de exportação estática (output: 'export')."
+        log "INFO" "Servindo arquivos estáticos da pasta 'out'..."
+        
+        if ! command -v npx &> /dev/null; then
+            log "ERROR" "npx não encontrado. Não é possível servir os arquivos estáticos."
+            exit 1
+        fi
+        
+        # Abrir navegador
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            (sleep 2 && open "http://localhost:$FRONTEND_PORT") &
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            if command -v xdg-open &> /dev/null; then
+                 (sleep 2 && xdg-open "http://localhost:$FRONTEND_PORT") &
+            fi
+        fi
+
+        npx serve out -p $FRONTEND_PORT
+    else
+        log "INFO" "Iniciando servidor Frontend (Start padrão)..."
+        npm start
+    fi
 }
 
 run_test() {
     log "INFO" "Iniciando modo TESTE..."
-    log "WARN" "Scripts de teste ainda não definidos. Apenas verificando lint."
+    
+    # Backend Tests
+    log "INFO" "Executando testes do Backend..."
+    cd "$BACKEND_DIR" && source venv/bin/activate
+    # Instalar deps de teste se necessário
+    pip install pytest httpx >> "$LOG_FILE" 2>&1
+    pytest >> "$LOG_FILE" 2>&1
+    if [ $? -eq 0 ]; then
+        log "SUCCESS" "Testes do Backend passaram."
+    else
+        log "ERROR" "Testes do Backend falharam. Verifique o log."
+        exit 1
+    fi
+    
+    cd "$FRONTEND_DIR"
+    
+    # Frontend Lint/Tests
+    log "INFO" "Executando Lint do Frontend..."
     npm run lint
+    check_error "Falha no Lint do Frontend."
+    
+    log "SUCCESS" "Todos os testes executados com sucesso."
 }
 
 # --- Fluxo Principal ---

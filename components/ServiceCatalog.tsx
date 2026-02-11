@@ -15,7 +15,7 @@ type Category = 'todos' | 'Cabelo' | 'Unhas' | 'Estética';
  * Utiliza o hook useServices para buscar dados da API.
  */
 export default function ServiceCatalog() {
-  const { services, loading, error } = useServices();
+  const { services, loading } = useServices();
   const [filter, setFilter] = useState<Category>('todos');
 
   // Filtra a lista de serviços com base na categoria
@@ -56,7 +56,7 @@ export default function ServiceCatalog() {
       </div>
 
       {/* Carrossel de Destaque por Categoria */}
-      <CategoryCarousel services={services} category={filter} />
+      <CategoryCarousel key={filter} services={services} category={filter} />
 
       {/* Sistema de Navegação (Filtros) */}
       <div className="sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-4 mb-8 -mx-4 px-4 border-b border-gray-100 md:static md:bg-transparent md:border-none md:p-0 md:mx-0 transition-all duration-300">

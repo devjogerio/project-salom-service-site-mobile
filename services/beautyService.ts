@@ -29,6 +29,7 @@ export async function fetchServices(): Promise<Service[]> {
       return ServiceListSchema.parse(data);
     } catch (validationError) {
       if (validationError instanceof z.ZodError) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         console.error('Erro de validação de schema (Zod) ao buscar serviços:', (validationError as any).errors);
         throw new Error('Dados recebidos da API são inválidos.');
       }
@@ -60,6 +61,7 @@ export async function fetchServiceById(id: string): Promise<Service | null> {
       return ServiceSchema.parse(data);
     } catch (validationError) {
        if (validationError instanceof z.ZodError) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         console.error(`Erro de validação de schema (Zod) ao buscar serviço ${id}:`, (validationError as any).errors);
         throw new Error('Dados do serviço inválidos.');
       }
@@ -98,6 +100,7 @@ export async function createAppointment(
       return AppointmentResponseSchema.parse(data);
     } catch (validationError) {
        if (validationError instanceof z.ZodError) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         console.error('Erro de validação de schema (Zod) ao criar agendamento:', (validationError as any).errors);
         throw new Error('Resposta de agendamento inválida.');
       }

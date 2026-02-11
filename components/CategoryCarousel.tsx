@@ -31,9 +31,10 @@ export default function CategoryCarousel({ services, category }: CategoryCarouse
 
   // Efeito para resetar o index quando a categoria mudar
   // Usando um padrão mais seguro para evitar updates desnecessários
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [category]);
+  // Removido useEffect pois agora usamos key={category} no pai
+  // useEffect(() => {
+  //   setCurrentIndex(0);
+  // }, [category]);
 
   // Efeito para rotação automática
   useEffect(() => {
