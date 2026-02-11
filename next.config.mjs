@@ -10,6 +10,14 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.honda.com.br',
+      },
     ],
   },
   // Desativa rewrites no modo export estático, pois não são suportados

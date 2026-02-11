@@ -48,11 +48,6 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const formattedPrice = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(service.price);
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200">
       <div 
