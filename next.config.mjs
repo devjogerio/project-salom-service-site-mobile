@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+const repoName = 'project-salom-service-site-mobile';
+
 const nextConfig = {
   // 'export' apenas em produção para gerar site estático (GitHub Pages)
-  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+  output: isProd ? 'export' : undefined,
+  // Define o caminho base para GitHub Pages (ex: /nome-do-repo)
+  basePath: isProd ? `/${repoName}` : '',
+  // Garante que os assets sejam carregados do caminho correto
+  assetPrefix: isProd ? `/${repoName}/` : '',
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -23,7 +30,7 @@ const nextConfig = {
   },
   // Rewrites ativos apenas em desenvolvimento para proxy do Backend
   rewrites: async () => {
-    if (process.env.NODE_ENV === 'production') return [];
+    if (isProd) return [];
     return [
       {
         source: '/api/python/:path*',
