@@ -39,9 +39,9 @@ const nextConfig = {
     ];
   },
   // Permite acesso via IP local durante desenvolvimento
-  experimental: {
-    allowedDevOrigins: ['localhost:3000', '192.168.1.8:3000'],
-  },
+  // experimental: {
+  //   allowedDevOrigins: ['localhost:3000', '192.168.1.8:3000'],
+  // },
 };
 
 export default nextConfig;

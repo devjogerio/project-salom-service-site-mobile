@@ -101,14 +101,11 @@ export async function createAppointment(
     await new Promise((resolve) => setTimeout(resolve, 1500)); // Delay fake
     
     return {
-      id: `mock-${Date.now()}`,
-      clientId: 'mock-client',
-      serviceId: params.serviceId,
-      date: typeof params.date === 'string' ? params.date : params.date.toISOString(),
       status: 'confirmed',
-      createdAt: new Date().toISOString(),
-      notes: params.notes
-    } as unknown as AppointmentResponse;
+      message: 'Agendamento realizado com sucesso (Simulação)',
+      appointment_id: `mock-${Date.now()}`,
+      estimated_price: 150.00
+    };
   }
 
   try {

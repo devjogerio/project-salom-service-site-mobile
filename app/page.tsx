@@ -26,7 +26,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       {/* Cabeçalho do Perfil */}
       <ProfileHeader />
 
@@ -45,9 +45,9 @@ export default function Home() {
 
           {/* Sidebar (Direita - Desktop) */}
           <aside className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-32 space-y-8">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 font-montserrat mb-4 border-b pb-2">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-32 space-y-8 transition-colors duration-300">
+              <div id="agendamento" className="scroll-mt-24">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white font-montserrat mb-4 border-b border-gray-100 dark:border-gray-700 pb-2 transition-colors duration-300">
                   Agendamento
                 </h3>
                 <AppointmentScheduler />
