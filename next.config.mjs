@@ -9,6 +9,8 @@ const nextConfig = {
   basePath: isProd ? `/${repoName}` : '',
   // Garante que os assets sejam carregados do caminho correto
   assetPrefix: isProd ? `/${repoName}/` : '',
+  // Gera /rota/index.html em vez de /rota.html (melhor para GitHub Pages)
+  trailingSlash: true,
   images: {
     unoptimized: true,
     remotePatterns: [
