@@ -7,8 +7,6 @@ const nextConfig = {
   output: isProd ? 'export' : undefined,
   // Define o caminho base para GitHub Pages (ex: /nome-do-repo)
   basePath: isProd ? `/${repoName}` : '',
-  // Garante que os assets sejam carregados do caminho correto
-  assetPrefix: isProd ? `/${repoName}/` : '',
   // Gera /rota/index.html em vez de /rota.html (melhor para GitHub Pages)
   trailingSlash: true,
   images: {
