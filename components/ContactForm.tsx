@@ -19,16 +19,16 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="py-12 px-6 bg-white border-t border-gray-100">
+    <section className="py-12 px-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
       <div className="max-w-2xl mx-auto text-center">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <MessageSquare className="text-pink-600" size={28} />
-          <h2 className="text-2xl font-bold font-montserrat text-gray-800">
+          <MessageSquare className="text-pink-600 dark:text-pink-500" size={28} />
+          <h2 className="text-2xl font-bold font-montserrat text-gray-800 dark:text-white transition-colors duration-300">
             Ficou com dúvidas?
           </h2>
         </div>
         
-        <p className="text-gray-500 mb-8">
+        <p className="text-gray-500 dark:text-gray-400 mb-8 transition-colors duration-300">
           Envie uma mensagem direta para nosso WhatsApp e responderemos o mais breve possível.
         </p>
 
@@ -37,13 +37,13 @@ export default function ContactForm() {
             required
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all resize-none h-32"
+            className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all resize-none h-32 placeholder-gray-400 dark:placeholder-gray-500"
             placeholder="Escreva sua dúvida aqui..."
           />
 
           <button
             type="submit"
-            className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-black transition-transform active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-gray-900 dark:bg-pink-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-black dark:hover:bg-pink-700 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
           >
             <Send size={20} />
             Enviar Mensagem

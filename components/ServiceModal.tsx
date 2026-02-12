@@ -51,13 +51,13 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200">
       <div 
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200 transition-colors duration-300"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
         {/* Header com Botão Fechar */}
-        <div className="relative h-80 w-full bg-gray-100">
+        <div className="relative h-80 w-full bg-gray-100 dark:bg-gray-800">
           <Image
             src={images[currentImageIndex]}
             alt={`${service.name} - Imagem ${currentImageIndex + 1}`}
@@ -108,17 +108,17 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
         <div className="p-6 overflow-y-auto custom-scrollbar">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h2 id="modal-title" className="text-2xl font-bold text-gray-900">{service.name}</h2>
-              <span className="inline-block mt-1 px-2 py-0.5 bg-pink-100 text-pink-700 text-xs font-bold rounded-full uppercase tracking-wide">
+              <h2 id="modal-title" className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{service.name}</h2>
+              <span className="inline-block mt-1 px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 text-xs font-bold rounded-full uppercase tracking-wide transition-colors duration-300">
                 {service.category}
               </span>
             </div>
             <div className="flex flex-col items-end">
-              <div className="flex items-center gap-1 text-pink-600 font-bold text-xl">
+              <div className="flex items-center gap-1 text-pink-600 dark:text-pink-400 font-bold text-xl transition-colors duration-300">
                 <Banknote size={20} />
                 <span>Valor a combinar</span>
               </div>
-              <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
+              <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors duration-300">
                 <Clock size={14} />
                 <span>{service.duration} min</span>
               </div>
@@ -127,23 +127,23 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-2 transition-colors duration-300">
                 Sobre o Serviço
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">
                 {service.description}
               </p>
             </div>
 
             {service.details?.products_used && service.details.products_used.length > 0 && (
               <div>
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-2 flex items-center gap-2 transition-colors duration-300">
                   <CheckCircle size={16} className="text-green-500" />
                   Produtos Utilizados
                 </h3>
                 <ul className="space-y-2">
                   {service.details.products_used.map((product: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                       <CheckCircle size={16} className="text-green-500 mt-0.5 shrink-0" />
                       <span>{product}</span>
                     </li>
@@ -153,15 +153,15 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
             )}
 
             {service.details?.contraindications && service.details.contraindications.length > 0 && (
-              <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                <h3 className="text-sm font-bold text-red-700 uppercase tracking-wide mb-2 flex items-center gap-2">
+              <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/30 transition-colors duration-300">
+                <h3 className="text-sm font-bold text-red-700 dark:text-red-400 uppercase tracking-wide mb-2 flex items-center gap-2 transition-colors duration-300">
                   <AlertCircle size={16} />
                   Contraindicações
                 </h3>
                 <ul className="space-y-1">
                   {service.details.contraindications.map((item, idx) => (
-                    <li key={idx} className="text-sm text-red-600 flex items-start gap-2">
-                      <span className="mt-1.5 w-1 h-1 bg-red-400 rounded-full" />
+                    <li key={idx} className="text-sm text-red-600 dark:text-red-300 flex items-start gap-2 transition-colors duration-300">
+                      <span className="mt-1.5 w-1 h-1 bg-red-400 dark:bg-red-300 rounded-full" />
                       {item}
                     </li>
                   ))}
@@ -172,14 +172,14 @@ export default function ServiceModal({ service, isOpen, onClose }: ServiceModalP
         </div>
 
         {/* Footer com Ação Principal */}
-        <div className="p-4 border-t border-gray-100 bg-white">
+        <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
           <button
             onClick={() => {
               onClose();
               const element = document.getElementById('agendamento');
               element?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-pink-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-pink-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             <Clock size={20} />
             Agendar Agora

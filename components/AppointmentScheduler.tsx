@@ -57,17 +57,17 @@ export default function AppointmentScheduler() {
   // Se agendamento confirmado
   if (result) {
     return (
-      <section id="agendamento" className="py-12 px-6 bg-green-50 rounded-3xl mx-4 my-8 border border-green-100 text-center">
+      <section id="agendamento" className="py-12 px-6 bg-green-50 dark:bg-green-900/10 rounded-3xl mx-4 my-8 border border-green-100 dark:border-green-800 text-center transition-colors duration-300">
         <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-green-600" />
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+            <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
         </div>
-        <h3 className="text-2xl font-bold text-green-800 mb-2">Agendamento Confirmado!</h3>
-        <p className="text-green-700 mb-6">{result.message}</p>
-        <div className="bg-white p-4 rounded-xl inline-block shadow-sm border border-green-100">
-          <p className="text-sm text-gray-500">ID do Agendamento</p>
-          <p className="font-mono font-bold text-gray-800">{result.appointment_id}</p>
+        <h3 className="text-2xl font-bold text-green-800 dark:text-green-300 mb-2 transition-colors duration-300">Agendamento Confirmado!</h3>
+        <p className="text-green-700 dark:text-green-400 mb-6 transition-colors duration-300">{result.message}</p>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl inline-block shadow-sm border border-green-100 dark:border-green-800 transition-colors duration-300">
+          <p className="text-sm text-gray-500 dark:text-gray-400">ID do Agendamento</p>
+          <p className="font-mono font-bold text-gray-800 dark:text-white">{result.appointment_id}</p>
         </div>
         <button
           onClick={() => {
@@ -78,7 +78,7 @@ export default function AppointmentScheduler() {
             setTime('');
             setSelectedServiceId('');
           }}
-          className="block mx-auto mt-8 text-green-700 font-bold hover:underline"
+          className="block mx-auto mt-8 text-green-700 dark:text-green-400 font-bold hover:underline transition-colors duration-300"
         >
           Realizar novo agendamento
         </button>
@@ -87,15 +87,15 @@ export default function AppointmentScheduler() {
   }
 
   return (
-    <section id="agendamento" className="py-12 px-4 md:px-8 bg-white max-w-4xl mx-auto">
+    <section id="agendamento" className="py-12 px-4 md:px-8 bg-white dark:bg-gray-800 max-w-4xl mx-auto rounded-3xl transition-colors duration-300">
       <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold font-montserrat text-gray-800 mb-2">
+        <h2 className="text-3xl font-bold font-montserrat text-gray-800 dark:text-white mb-2 transition-colors duration-300">
           Agende seu Horário
         </h2>
-        <p className="text-gray-500">Escolha o serviço e o melhor momento para você.</p>
+        <p className="text-gray-500 dark:text-gray-400 transition-colors duration-300">Escolha o serviço e o melhor momento para você.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-gray-50 p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-gray-50 dark:bg-gray-900 p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors duration-300">
         {/* Seleção de Serviço */}
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Serviço Desejado</label>

@@ -49,7 +49,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${roboto.variable} antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-roboto transition-colors duration-300`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {/* Layout Principal Responsivo */}
           <main className="w-full min-h-screen bg-white dark:bg-gray-900 shadow-none overflow-x-hidden relative transition-colors duration-300">
             {children}
